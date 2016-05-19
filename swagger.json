@@ -1,0 +1,98 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "0.0.1",
+        "title": "Authorization Service",
+        "description": "Service for generating and verifying JSON Web Tokens.\nFor details see: https://tools.ietf.org/html/rfc7519\n"
+    },
+    "schemes": [
+        "https"
+    ],
+    "paths": {
+        "/public-key": {
+            "get": {
+                "produces": [
+                    "text/plain"
+                ],
+                "description": "Public key useful for verifying tokens.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "description": "Public key.",
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/sign-in/{username}": {
+            "post": {
+                "produces": [
+                    "text/plain"
+                ],
+                "consumes": [
+                    "text/plain"
+                ],
+                "description": "Return token for authorization purposes.",
+                "parameters": [
+                    {
+                        "name": "username",
+                        "in": "path",
+                        "description": "username",
+                        "type": "string",
+                        "required": true
+                    },
+                    {
+                        "name": "password",
+                        "in": "body",
+                        "description": "password",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "description": "Token.",
+                            "type": "string"
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid username and/or password."
+                    }
+                }
+            }
+        },
+        "/verify": {
+            "post": {
+                "consumes": [
+                    "text/plain"
+                ],
+                "description": "Checks if token is still valid.",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "body",
+                        "description": "Token to verify with public key.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Token is valid."
+                    },
+                    "401": {
+                        "description": "Invalid token."
+                    }
+                }
+            }
+        }
+    }
+}
